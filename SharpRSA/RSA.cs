@@ -94,7 +94,7 @@ namespace SharpRSA
         {
             encoding ??= Encoding;
 
-            var chunkSize = key.n.ToByteArray().Length / 3;
+            var chunkSize = key.N.ToByteArray().Length / 3;
             var encodedChunks = new List<string>();
 
             for ( int i = 0; i < text.Length; i += chunkSize )
@@ -131,7 +131,7 @@ namespace SharpRSA
         public static byte[] EncryptBytes( byte[] bytes, Key public_key )
         {
             //Checking that the size of the bytes is less than n, and greater than 1.
-            if ( 1 > bytes.Length || bytes.Length >= public_key.n.ToByteArray().Length )
+            if ( 1 > bytes.Length || bytes.Length >= public_key.N.ToByteArray().Length )
             {
                 throw new Exception( "Bytes given are longer than length of key element n (" + bytes.Length + " bytes)." );
             }
@@ -147,7 +147,7 @@ namespace SharpRSA
             //Computing as a BigInteger the encryption operation.
             var cipher_bigint = new BigInteger();
             var padded_bigint = new BigInteger( bytes_padded );
-            cipher_bigint = BigInteger.ModPow( padded_bigint, public_key.e, public_key.n );
+            cipher_bigint = BigInteger.ModPow( padded_bigint, public_key.E, public_key.N );
 
             //Returning the byte array of encrypted bytes.
             return cipher_bigint.ToByteArray();
@@ -157,7 +157,7 @@ namespace SharpRSA
         public static byte[] DecryptBytes( byte[] bytes, Key private_key )
         {
             //Checking that the private key is legitimate, and contains d.
-            if ( private_key.type != KeyType.PRIVATE )
+            if ( private_key.Type != KeyType.Private )
             {
                 throw new Exception( "Private key given for decrypt is classified as non-private in instance." );
             }
@@ -165,7 +165,7 @@ namespace SharpRSA
             //Decrypting.
             var plain_bigint = new BigInteger();
             var padded_bigint = new BigInteger( bytes );
-            plain_bigint = BigInteger.ModPow( padded_bigint, private_key.d, private_key.n );
+            plain_bigint = BigInteger.ModPow( padded_bigint, private_key.D, private_key.N );
 
             //Removing all padding bytes, including the marker 0xFF.
             byte[] plain_bytes = plain_bigint.ToByteArray();

@@ -24,7 +24,7 @@ namespace SharpRSA
         {
             //Getting the max chunk length (public key byte length -2) and amount of chunks in the given byte array b.
             initialByteLength = b.Length;
-            maxChunkLength = public_.n.ToByteArray().Length - 4;
+            maxChunkLength = public_.N.ToByteArray().Length - 4;
             chunkModulus = b.Length % maxChunkLength;
             float unroundedChunks = (float)b.Count() / (float)maxChunkLength;
             chunks = (int)Math.Ceiling( unroundedChunks );
