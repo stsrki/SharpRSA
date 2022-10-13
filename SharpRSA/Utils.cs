@@ -9,9 +9,9 @@ namespace SharpRSA
         /// </summary>
         /// <param name="bitNumFromRight">The index of the bit number from the lesser side of the byte.</param>
         /// <param name="toSet">The referenced byte to set.</param>
-        public static void SetBitInByte(int bitNumFromRight, ref byte toSet)
+        public static void SetBitInByte( int bitNumFromRight, ref byte toSet )
         {
-            byte mask = (byte)(1 << bitNumFromRight);
+            byte mask = (byte)( 1 << bitNumFromRight );
             toSet |= mask;
         }
 
@@ -19,9 +19,9 @@ namespace SharpRSA
         /// Increments the byte array as a whole, by a given amount. Assumes little endian.
         /// Assumes unsigned randomBytes.
         /// </summary>
-        public static void IncrementByteArrayLE(ref byte[] randomBytes, int amt)
+        public static void IncrementByteArrayLE( ref byte[] randomBytes, int amt )
         {
-            BigInteger n = new BigInteger(randomBytes);
+            BigInteger n = new BigInteger( randomBytes );
             n += amt;
             randomBytes = n.ToByteArray();
         }
@@ -30,9 +30,9 @@ namespace SharpRSA
         /// Decrements the byte array as a whole, by a given amount. Assumes little endian.
         /// Assumes unsigned randomBytes.
         /// </summary>
-        public static void DecrementByteArrayLE(ref byte[] randomBytes, int amt)
+        public static void DecrementByteArrayLE( ref byte[] randomBytes, int amt )
         {
-            BigInteger n = new BigInteger(randomBytes);
+            BigInteger n = new BigInteger( randomBytes );
             n -= amt;
             randomBytes = n.ToByteArray();
         }

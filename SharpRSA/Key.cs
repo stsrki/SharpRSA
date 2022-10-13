@@ -17,7 +17,7 @@ namespace SharpRSA
         [DataMember]
         public readonly Key public_;
 
-        public KeyPair(Key private__, Key public__)
+        public KeyPair( Key private__, Key public__ )
         {
             private_ = private__;
             public_ = public__;
@@ -29,11 +29,11 @@ namespace SharpRSA
         /// <param name="n">The "n" value from RSA calculations.</param>
         /// <param name="d">The "d" value from RSA calculations.</param>
         /// <returns></returns>
-        public static KeyPair Generate(BigInteger n, BigInteger d)
+        public static KeyPair Generate( BigInteger n, BigInteger d )
         {
-            Key public_ = new Key(n, KeyType.PUBLIC);
-            Key private_ = new Key(n, KeyType.PRIVATE, d);
-            return new KeyPair(private_, public_);
+            Key public_ = new Key( n, KeyType.PUBLIC );
+            Key private_ = new Key( n, KeyType.PRIVATE, d );
+            return new KeyPair( private_, public_ );
         }
     }
 
@@ -42,14 +42,14 @@ namespace SharpRSA
     /// Class to contain RSA key values for public and private keys. All values readonly and protected
     /// after construction, type set on construction.
     /// </summary>
-    [DataContract(Name = "Key", Namespace = "SharpRSA")]
+    [DataContract( Name = "Key", Namespace = "SharpRSA" )]
     [Serializable]
     public class Key
     {
         //Hidden key constants, n and e are public key variables.
-        [DataMember(Name = "n")]
+        [DataMember( Name = "n" )]
         public BigInteger n { get; set; }
-        [DataMember(Name = "e")]
+        [DataMember( Name = "e" )]
         public int e = Constants.e;
 
 
@@ -58,14 +58,15 @@ namespace SharpRSA
         public readonly BigInteger d;
 
         //Variable for key type.
-        [DataMember(Name = "type")]
+        [DataMember( Name = "type" )]
         public KeyType type { get; set; }
 
         //Constructor that sets values once, values then permanently unwriteable.
-        public Key(BigInteger n_, KeyType type_, BigInteger d_)
+        public Key( BigInteger n_, KeyType type_, BigInteger d_ )
         {
             //Catching edge cases for invalid input.
-            if (type_ == KeyType.PRIVATE && d_ < 2) { throw new Exception("Constructed as private, but invalid d value provided."); }
+            if ( type_ == KeyType.PRIVATE && d_ < 2 )
+            { throw new Exception( "Constructed as private, but invalid d value provided." ); }
 
             //Setting values.
             n = n_;
@@ -74,10 +75,11 @@ namespace SharpRSA
         }
 
         //Overload constructor for key with no d value.
-        public Key(BigInteger n_, KeyType type_)
+        public Key( BigInteger n_, KeyType type_ )
         {
             //Catching edge cases for invalid input.
-            if (type_ == KeyType.PRIVATE) { throw new Exception("Constructed as private, but no d value provided."); }
+            if ( type_ == KeyType.PRIVATE )
+            { throw new Exception( "Constructed as private, but no d value provided." ); }
 
             //Setting values.
             n = n_;
