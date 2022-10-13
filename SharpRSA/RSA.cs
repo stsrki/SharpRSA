@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Numerics;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
@@ -87,20 +89,44 @@ namespace SharpRSA
             //Returning working BigInt.
             return new BigInteger( randomBytes );
         }
+
         public static string Encrypt( string text, Key key, Encoding encoding = null )
         {
             encoding ??= Encoding;
-            byte[] bytes = Encoding.GetBytes( text );
-            byte[] ciphed = EncryptBytes( bytes, key );
-            return Convert.ToBase64String( ciphed );
+
+            var chunkSize = key.n.ToByteArray().Length / 3;
+            var encodedChunks = new List<string>();
+
+            for ( int i = 0; i < text.Length; i += chunkSize )
+            {
+                var chunk = text.Skip( i ).Take( chunkSize ).ToArray();
+                var bytes = encoding.GetBytes( chunk );
+                var ciphed = EncryptBytes( bytes, key );
+
+                encodedChunks.Add( Convert.ToBase64String( ciphed ) );
+            }
+
+            return string.Join( ';', encodedChunks );
         }
+
         public static string Decrypt( string text, Key key, Encoding encoding = null )
         {
             encoding ??= Encoding;
-            byte[] bytes = Convert.FromBase64String( text );
-            byte[] ciphed = DecryptBytes( bytes, key );
-            return Encoding.GetString( ciphed );
+
+            var encodedChunks = text.Split( ';', StringSplitOptions.None );
+            var decodedChunks = new List<string>();
+
+            foreach ( var chunk in encodedChunks )
+            {
+                byte[] bytes = Convert.FromBase64String( chunk );
+                byte[] deciphed = DecryptBytes( bytes, key );
+
+                decodedChunks.Add( encoding.GetString( deciphed ) );
+            }
+
+            return string.Join( string.Empty, decodedChunks );
         }
+
         //Encrypts a set of bytes when given a public key.
         public static byte[] EncryptBytes( byte[] bytes, Key public_key )
         {
